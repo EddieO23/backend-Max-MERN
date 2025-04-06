@@ -2,6 +2,7 @@ const express = require('express')
 const bodyParse = require('body-parser')
 
 const placesRouters = require('./routes/PlacesRoutes')
+const HttpError = require('./models/http-error')
 const bodyParser = require('body-parser')
 
 const app = express()
@@ -9,6 +10,11 @@ const app = express()
 app.use(bodyParser.json())
 
 app.use('/api/places', placesRouters) // => /api/places...
+
+app.use((req, res, next) => {
+  const error = new HttpError('This route does not exist.', 404)
+  throw error
+})
 
 app.use((error, req, res,next) => {
   if(res.headerSent) {
