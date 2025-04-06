@@ -66,7 +66,7 @@ const createPlace = async (req, res, next) => {
 const errors = validationResult(req)
 if(!errors.isEmpty()) {
   console.log(errors);
-  next(new HttpError('Invalid inputs passed. Please check the input data you were trying to submit.', 422))
+  return next(new HttpError('Invalid inputs passed. Please check the input data you were trying to submit.', 422))
 }
 
 

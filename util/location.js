@@ -1,9 +1,11 @@
 const axios = require('axios')
+require('dotenv').config();
 
 const HttpError = require('../models/http-error')
+const apiKey = process.env.GOOGLE_API_KEY;
 
 async function getCoordsForAddress(address) {
-  const response  = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${process.env.GOOGLE_API_KEY}`)
+  const response  = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`)
 
   const data = response.data
   if(!data || data.status === 'ZERO_RESULTS') {
@@ -16,3 +18,8 @@ async function getCoordsForAddress(address) {
 }
 
 module.exports = getCoordsForAddress
+
+
+//example of URL query string for translating address into coordinates
+
+// https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=YOUR_API_KEY
