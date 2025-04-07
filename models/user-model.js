@@ -7,7 +7,7 @@ const userSchema = new Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true, minlength: 6 },
   image: {type: String, required: true}, // this is the userAvatar not the placeIMG
-  places: {type: String,requied: true}
+  places: [{ type: mongoose.Types.ObjectId, required: true, ref: 'Place'}]
 });
 
 

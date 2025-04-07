@@ -36,7 +36,7 @@ const signUp = async (req, res, next) => {
       )
     );
   }
-  const { name, email, password, places } = req.body;
+  const { name, email, password } = req.body;
 
   let existingUser;
   try {
@@ -62,7 +62,7 @@ const signUp = async (req, res, next) => {
     image:
       'https://images.unsplash.com/photo-1633507105239-b16794c02b6a?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     password,
-    places,
+    places : []
   });
 
   try {
