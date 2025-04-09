@@ -11,6 +11,17 @@ const app = express();
 
 app.use(bodyParser.json());
 
+// The following middleware function is specifically for CORS functionality
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+  );
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE');
+  next();
+});
+
 app.use('/api/places', placesRouters); // => /api/places...
 app.use('/api/users', usersRouters);
 
@@ -29,7 +40,7 @@ app.use((error, req, res, next) => {
 
 mongoose
   .connect(
-    'mongodb+srv://eocampo52:pd3Tihxj2FuXX9gJ@placesmern.kdjxxeq.mongodb.net/places?retryWrites=true&w=majority'
+    'mongodb+srv://eocampo52:pd3Tihxj2FuXX9gJ@placesmern.kdjxxeq.mongodb.net/MERN?retryWrites=true&w=majority'
   )
   .then(() => {
     app.listen(4000);
