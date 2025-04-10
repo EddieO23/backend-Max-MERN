@@ -3,17 +3,19 @@ const { validationResult } = require('express-validator');
 const HttpError = require('../models/http-error');
 const User = require('../models/user-model');
 
-
 const getUsers = async (req, res, next) => {
   let users;
 
   try {
     users = await User.find({}, '-password');
   } catch (err) {
-    const error = new HttpError('Fetching users failed. Please try again later.', 500)
-    return next(error)
+    const error = new HttpError(
+      'Fetching users failed. Please try again later.',
+      500
+    );
+    return next(error);
   }
-  res.json({users: users.map(u => u.toObject({getters:true}))})
+  res.json({ users: users.map((u) => u.toObject({ getters: true })) });
 };
 
 const signUp = async (req, res, next) => {
@@ -53,7 +55,7 @@ const signUp = async (req, res, next) => {
     image:
       'https://images.unsplash.com/photo-1633507105239-b16794c02b6a?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     password,
-    places : []
+    places: [],
   });
 
   try {
@@ -85,7 +87,10 @@ const login = async (req, res, next) => {
     return next(error);
   }
 
-  res.json({ message: 'Logged in!' });
+  res.json({
+    message: 'Logged in!',
+    user: existingUser.toObject({ getters: true }),
+  });
 };
 
 exports.getUsers = getUsers;
