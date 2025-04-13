@@ -6,7 +6,6 @@ const Place = require('../models/place-model');
 const User = require('../models/user-model');
 const mongoose = require('mongoose');
 
-
 const getPlaceById = async (req, res, next) => {
   const placeId = req.params.pid; // {pid: 'p1'}
 
@@ -35,7 +34,7 @@ const getPlaceById = async (req, res, next) => {
 const getPlacesByUserId = async (req, res, next) => {
   const userId = req.params.uid;
 
-  let userWithPlaces 
+  let userWithPlaces;
   try {
     userWithPlaces = await User.findById(userId).populate('places');
   } catch (err) {
@@ -52,7 +51,9 @@ const getPlacesByUserId = async (req, res, next) => {
     );
   }
 
-  res.json({ places: userWithPlaces.places.map((p) => p.toObject({ getters: true })) });
+  res.json({
+    places: userWithPlaces.places.map((p) => p.toObject({ getters: true })),
+  });
 };
 
 const createPlace = async (req, res, next) => {
@@ -83,8 +84,7 @@ const createPlace = async (req, res, next) => {
     description,
     address,
     location: coordinates,
-    image:
-      'https://images.unsplash.com/photo-1565800847038-b509fad821f8?q=80&w=3024&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    image: req.file.path,
     creator,
   });
 
@@ -164,29 +164,35 @@ const updatePlace = async (req, res, next) => {
 const deletePlace = async (req, res, next) => {
   const placeId = req.params.pid;
 
-  let place
+  let place;
   try {
-    place = await Place.findById(placeId).populate('creator')
+    place = await Place.findById(placeId).populate('creator');
   } catch (err) {
-    const error = new HttpError('Something went wrong, could not delete place.', 500)
-    return next(error)
+    const error = new HttpError(
+      'Something went wrong, could not delete place.',
+      500
+    );
+    return next(error);
   }
 
-  if(!place) {
-    const error = new HttpError('Could not find place for this ID', 404)
-    return next(error)
+  if (!place) {
+    const error = new HttpError('Could not find place for this ID', 404);
+    return next(error);
   }
 
   try {
-    const sess = await mongoose.startSession()
-    sess.startTransaction()
-    await place.deleteOne({session: sess})
-    place.creator.places.pull(place)
-    await place.creator.save({session:sess})
+    const sess = await mongoose.startSession();
+    sess.startTransaction();
+    await place.deleteOne({ session: sess });
+    place.creator.places.pull(place);
+    await place.creator.save({ session: sess });
     await sess.commitTransaction();
   } catch (err) {
-    const error = new HttpError('Something went wrong, could not delete place.', 500)
-    return next(error)
+    const error = new HttpError(
+      'Something went wrong, could not delete place.',
+      500
+    );
+    return next(error);
   }
   res.status(200).json({ msg: 'Succesfully deleted a place.' });
 };
