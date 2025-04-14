@@ -3,12 +3,18 @@ const { check } = require('express-validator');
 
 const placesControllers = require('../controllers/places-controllers');
 const fileUpload = require('../middleware/file-upload');
+const checkAuth = require('../middleware/check-auth')
 
 const router = express.Router();
 
 router.get('/:pid', placesControllers.getPlaceById);
 
-router.get('/user/:uid', placesControllers.getPlacesByUserId);
+router.get('/user/:uid', placesControllers.getPlacesByUserId)
+
+// write a middleware here which checks an incoming request for a valid token.
+// And if the token is invalid, it will send back a response and it will block the request from continuing
+// its journey to the other routes.
+router.use(checkAuth)
 
 router.post(
   '/',
